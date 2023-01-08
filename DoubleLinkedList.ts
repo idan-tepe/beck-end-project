@@ -1,23 +1,25 @@
-export class ListNode {
-  data: unknown;
-  next: ListNode | null;
-  prev: ListNode | null;
-  constructor(data: unknown) {
+export class ListNode<k,v> {
+
+  data: Map<k,v>;
+  next: ListNode<k,v> | null;
+  prev: ListNode<k,v> | null;
+
+  constructor(data: Map<k,v>) {
     this.data = data;
     this.next = null;
     this.prev = null;
   }
-  setNext(node: ListNode) {
+  setNext(node: ListNode<k,v>) {
     this.next = node;
   }
-  setPrev(node: ListNode) {
+  setPrev(node: ListNode<k,v>) {
     this.prev = node;
   }
 }
 
-export class DoubleLinkedList {
-  head: ListNode | null;
-  tail: ListNode | null;
+export class DoubleLinkedList<k,v> {
+  head: ListNode<k,v> | null;
+  tail: ListNode<k,v>| null;
   NodeCounter: number;
 
   constructor() {
@@ -28,7 +30,8 @@ export class DoubleLinkedList {
   getHead() {
     return this.head;
   }
-  setHead(node: ListNode) {
+
+  setHead(node: ListNode<k,v>) {
     if (this.head === null) {
       this.head = node;
       this.tail = node;
@@ -39,10 +42,12 @@ export class DoubleLinkedList {
     }
     this.NodeCounter += 1;
   }
+
   getTail() {
     return this.tail;
   }
-  removeNode(node: ListNode) {
+
+  removeNode(node: ListNode<k,v>) {
     let currentNode = this.head;
     while (currentNode) {
       if (currentNode === node) {

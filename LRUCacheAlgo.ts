@@ -1,26 +1,27 @@
 import { AbstractCacheAlgo } from "./AbstractCacheAlgo";
 import { ListNode, DoubleLinkedList } from "./DoubleLinkedList";
 
-class LRUCacheAlgo<k, v> extends AbstractCacheAlgo<string, v> {
+class LRUCacheAlgo<k, v> extends AbstractCacheAlgo<k, v> {
   constructor(numOfMaxLength: number) {
     super();
     this.maxSizeOfCache = numOfMaxLength;
   }
-  hashMap = new Map();
+
+  hashMap = new Map<k,ListNode<k,v>>();
   LinkedList = new DoubleLinkedList();
 
-  getElement(key: string) {
+  getElement(key: k) {
     const someNode = this.hashMap.get(key);
 
     if (someNode) {
       this.removeElement(key);
-      this.setElement(key, someNode.data[key]);
-      return someNode.data[key];
+      this.setElement(key, someNode.data.get(key));
+      return someNode.data.get(key);
     }
     return undefined;
   }
 
-  removeElement(key: string) {
+  removeElement(key: k) {
     if (this.hashMap.get(key)) {
       this.LinkedList.removeNode(this.hashMap.get(key));
       this.hashMap.delete(key);
@@ -29,7 +30,7 @@ class LRUCacheAlgo<k, v> extends AbstractCacheAlgo<string, v> {
     return false;
   }
 
-  setElement(key: string, value: v) {
+  setElement(key: k, value: v) {
     if (this.hashMap.get(key)) {
       this.removeElement(key);
       this.setElement(key, value);
@@ -39,7 +40,9 @@ class LRUCacheAlgo<k, v> extends AbstractCacheAlgo<string, v> {
       this.LinkedList.removeNode(this.LinkedList.getTail());
       this.hashMap.delete(key);
     }
-    let newNode = new ListNode({ [key]: value });
+    let newMap = new Map<k,v>()
+    newMap.set(key,value)
+    let newNode = new ListNode<k,v>(newMap);
     this.LinkedList.setHead(newNode);
     this.hashMap.set(key, newNode);
     return undefined;
